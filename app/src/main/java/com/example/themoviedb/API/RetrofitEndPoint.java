@@ -13,4 +13,8 @@ public interface RetrofitEndPoint {
 
     @GET("movie/top_rated")
     Call<MovieResponse> getMovieTopRated(@Query("api_key") String apiKey);
+
+    @GET("search/multi")
+    Call<MovieResponse> getSearchMovie(@Query("api_key") String apiKey, @Query("query") String query);
+
 }
