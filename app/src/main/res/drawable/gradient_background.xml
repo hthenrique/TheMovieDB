@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="@color/toolbarColor"
+        android:centerColor="@color/secondary"
+        android:endColor="@color/colorOn"
+        android:angle="-45"/>
+</shape>
