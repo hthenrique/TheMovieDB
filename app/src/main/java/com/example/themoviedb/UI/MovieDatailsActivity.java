@@ -1,9 +1,12 @@
 package com.example.themoviedb.UI;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActionBar;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -25,6 +28,9 @@ public class MovieDatailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_datails);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         moviePoster = findViewById(R.id.moviePoster2);
         titleMovie = findViewById(R.id.titleMovie);
         releaseDateTv = findViewById(R.id.releaseDate2);
@@ -61,5 +67,14 @@ public class MovieDatailsActivity extends AppCompatActivity {
         movieRatingBar.setStepSize(0.01f);
         movieRatingBar.setRating((float)ratingValue/2);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
