@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.UI.Main;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -15,23 +15,27 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.themoviedb.API.RequestApi;
 import com.example.themoviedb.API.RetrofitClient;
 import com.example.themoviedb.API.RetrofitEndPoint;
 import com.example.themoviedb.Model.MovieDetails;
 import com.example.themoviedb.Model.MovieResponse;
+import com.example.themoviedb.R;
 import com.example.themoviedb.UI.MoviesAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
-    RecyclerView recyclerviewMovies, recyclerviewMovies2, searchList;
+public class MainActivity extends AppCompatActivity implements MoviesContract.View {
+    RecyclerView recyclerviewPopularMovies, recyclerviewMoviesTopRated, searchList;
     ScrollView scrollView;
     SearchView.OnQueryTextListener queryTextListener;
-
+    MoviesAdapter moviesAdapter;
+    MoviesContract.UserActionsListener movieListener;
     //API key fornecida pelo site
     String apiKey = "38594c476985d7c2fad6093dc2ac98f7";
 
@@ -40,17 +44,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerviewMovies = findViewById(R.id.recyclerviewMovies);
-        recyclerviewMovies2 = findViewById(R.id.recyclerviewMovies2);
+        recyclerviewPopularMovies = findViewById(R.id.recyclerviewPopularMovies);
+        recyclerviewMoviesTopRated = findViewById(R.id.recyclerviewMoviesTopRated);
         searchList = findViewById(R.id.searchList);
         scrollView = findViewById(R.id.mainScrollView);
 
-        recyclerviewMovies.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
-        recyclerviewMovies2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+        movieListener.loadMovies(apiKey);
+
+        moviesAdapter = new MoviesAdapter(new ArrayList<MovieDetails>(0),getApplicationContext());
+        movieListener = new MoviesPresenter(this);
+        recyclerviewPopularMovies.setAdapter(moviesAdapter);
+
+        recyclerviewPopularMovies.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+        recyclerviewMoviesTopRated.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
         searchList.setLayoutManager(new GridLayoutManager(this, 2));
 
         //Inicia as Listas
-        movieList();
+        //movieList();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        movieListener.loadMovies(apiKey);
     }
 
     @Override
@@ -75,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
+
+                    /*recyclerviewMoviesTopRated.setAdapter(new MoviesAdapter(movieDetails, getApplicationContext()));
+                    scrollView.setVisibility(View.VISIBLE);
+                    searchList.setVisibility(View.GONE);*/
                     movieList();
                     return false;
                 }
@@ -104,42 +124,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //Chama o Retrofit e envia a key para fazer o request na api, Retortando os filmes mais populares do site
     private void movieList() {
-        //callback de filmes populares
-        RetrofitEndPoint retrofitEndPoint = RetrofitClient.getClient().create(RetrofitEndPoint.class);
-        Call<MovieResponse> call = retrofitEndPoint.getMovies(apiKey, 1);
-        call.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                List<MovieDetails> movieDetails = response.body().getResults();
-                recyclerviewMovies.setAdapter(new MoviesAdapter(movieDetails, getApplicationContext()));
-                scrollView.setVisibility(View.VISIBLE);
-                searchList.setVisibility(View.GONE);
-            }
+        scrollView.setVisibility(View.VISIBLE);
+        searchList.setVisibility(View.GONE);
+    }
 
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Request Fail", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        //callback de filmes melhores avaliados
-        Call<MovieResponse> call2 = retrofitEndPoint.getMovieTopRated(apiKey);
-        call2.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                List<MovieDetails> movieDetails = response.body().getResults();
-                recyclerviewMovies2.setAdapter(new MoviesAdapter(movieDetails, getApplicationContext()));
-                scrollView.setVisibility(View.VISIBLE);
-                searchList.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Request Fail", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+    @Override
+    public void showMovies(List<MovieDetails> movies) {
+        moviesAdapter.replaceData(movies);
     }
 }

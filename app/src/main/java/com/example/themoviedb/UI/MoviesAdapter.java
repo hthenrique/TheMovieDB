@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.themoviedb.Model.MovieDetails;
 import com.example.themoviedb.R;
+import com.example.themoviedb.UI.MovieDetails.MovieDatailsActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -74,6 +75,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             Toast.makeText(context, "No Movies", Toast.LENGTH_SHORT).show();
         }
         return 0;
+    }
+
+    public void replaceData(List<MovieDetails> movies) {
+        setList(movies);
+        notifyDataSetChanged();
+    }
+
+    private void setList(List<MovieDetails> movies) {
+        moviesList = movies;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
