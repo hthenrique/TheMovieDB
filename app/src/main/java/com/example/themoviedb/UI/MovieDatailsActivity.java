@@ -1,15 +1,13 @@
 package com.example.themoviedb.UI;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.ActionBar;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.themoviedb.R;
 import com.squareup.picasso.Picasso;
@@ -47,6 +45,7 @@ public class MovieDatailsActivity extends AppCompatActivity {
 
         setTitle(title);
         titleMovie.setText(getIntent().getStringExtra("titleMovie"));
+        //compara se o filme está com o campo vazio
         if (releaseDate == null){
             CharSequence text = "Don't have";
             releaseDateTv.setText("Release date: " + text);
@@ -63,6 +62,8 @@ public class MovieDatailsActivity extends AppCompatActivity {
         }
 
         Picasso.get().load(poster).into(moviePoster);
+
+        //seta o valor das estrelas na tela do usuario, esta sendo convertido de double para o float
         movieRatingBar.setMax(5);
         movieRatingBar.setStepSize(0.01f);
         movieRatingBar.setRating((float)ratingValue/2);

@@ -1,8 +1,6 @@
 package com.example.themoviedb;
 
 import android.app.SearchManager;
-import androidx.appcompat.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +10,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +29,6 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerviewMovies, recyclerviewMovies2, searchList;
-    String querySearch;
     ScrollView scrollView;
     SearchView.OnQueryTextListener queryTextListener;
 
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerviewMovies2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
         searchList.setLayoutManager(new GridLayoutManager(this, 2));
 
-        //Inicia a Lista
+        //Inicia as Listas
         movieList();
     }
 
@@ -70,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             queryTextListener = new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
+                    //chama o metodo de procurar filmes
                     searchMovie(query);
                     return true;
                 }
@@ -86,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void searchMovie(String query) {
+        //Callback de pesquisa de filmes
         RetrofitEndPoint retrofitEndPoint = RetrofitClient.getClient().create(RetrofitEndPoint.class);
         Call<MovieResponse> call = retrofitEndPoint.getSearchMovie(apiKey, query);
         call.enqueue(new Callback<MovieResponse>() {
@@ -106,38 +106,40 @@ public class MainActivity extends AppCompatActivity {
 
     //Chama o Retrofit e envia a key para fazer o request na api, Retortando os filmes mais populares do site
     private void movieList() {
-            RetrofitEndPoint retrofitEndPoint = RetrofitClient.getClient().create(RetrofitEndPoint.class);
-            Call<MovieResponse> call = retrofitEndPoint.getMovies(apiKey, 1);
-            call.enqueue(new Callback<MovieResponse>() {
-                @Override
-                public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                    List<MovieDetails> movieDetails = response.body().getResults();
-                    recyclerviewMovies.setAdapter(new MoviesAdapter(movieDetails, getApplicationContext()));
-                    scrollView.setVisibility(View.VISIBLE);
-                    searchList.setVisibility(View.GONE);
-                }
+        //callback de filmes populares
+        RetrofitEndPoint retrofitEndPoint = RetrofitClient.getClient().create(RetrofitEndPoint.class);
+        Call<MovieResponse> call = retrofitEndPoint.getMovies(apiKey, 1);
+        call.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                List<MovieDetails> movieDetails = response.body().getResults();
+                recyclerviewMovies.setAdapter(new MoviesAdapter(movieDetails, getApplicationContext()));
+                scrollView.setVisibility(View.VISIBLE);
+                searchList.setVisibility(View.GONE);
+            }
 
-                @Override
-                public void onFailure(Call<MovieResponse> call, Throwable t) {
-                    Toast.makeText(MainActivity.this, "Request Fail", Toast.LENGTH_SHORT).show();
-                }
-            });
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Request Fail", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-            Call<MovieResponse> call2 = retrofitEndPoint.getMovieTopRated(apiKey);
-            call2.enqueue(new Callback<MovieResponse>() {
-                @Override
-                public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                    List<MovieDetails> movieDetails = response.body().getResults();
-                    recyclerviewMovies2.setAdapter(new MoviesAdapter(movieDetails, getApplicationContext()));
-                    scrollView.setVisibility(View.VISIBLE);
-                    searchList.setVisibility(View.GONE);
-                }
+        //callback de filmes melhores avaliados
+        Call<MovieResponse> call2 = retrofitEndPoint.getMovieTopRated(apiKey);
+        call2.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                List<MovieDetails> movieDetails = response.body().getResults();
+                recyclerviewMovies2.setAdapter(new MoviesAdapter(movieDetails, getApplicationContext()));
+                scrollView.setVisibility(View.VISIBLE);
+                searchList.setVisibility(View.GONE);
+            }
 
-                @Override
-                public void onFailure(Call<MovieResponse> call, Throwable t) {
-                    Toast.makeText(MainActivity.this, "Request Fail", Toast.LENGTH_SHORT).show();
-                }
-            });
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Request Fail", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 }

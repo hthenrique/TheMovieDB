@@ -53,19 +53,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         double rate = movieDetails.getVoteAverage();
         holder.movieRatingBar.setRating((float)rate/2);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent movieDetail = new Intent(context, MovieDatailsActivity.class);
-                movieDetail.putExtra("idMovie", movieDetails.getId());
-                movieDetail.putExtra("titleMovie", movieDetails.getTitle());
-                movieDetail.putExtra("languageMovie", movieDetails.getOriginalLanguage());
-                movieDetail.putExtra("overviewMovie", movieDetails.getOverview());
-                movieDetail.putExtra("posterMovie", posterLink);
-                movieDetail.putExtra("releaseDateMovie", movieDetails.getReleaseDate());
-                movieDetail.putExtra("ratingBar", movieDetails.getVoteAverage());
-                context.startActivity(movieDetail);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent movieDetail = new Intent(context, MovieDatailsActivity.class);
+            movieDetail.putExtra("idMovie", movieDetails.getId());
+            movieDetail.putExtra("titleMovie", movieDetails.getTitle());
+            movieDetail.putExtra("languageMovie", movieDetails.getOriginalLanguage());
+            movieDetail.putExtra("overviewMovie", movieDetails.getOverview());
+            movieDetail.putExtra("posterMovie", posterLink);
+            movieDetail.putExtra("releaseDateMovie", movieDetails.getReleaseDate());
+            movieDetail.putExtra("ratingBar", movieDetails.getVoteAverage());
+            context.startActivity(movieDetail);
         });
     }
 
