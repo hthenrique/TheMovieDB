@@ -17,11 +17,22 @@ public class MoviesPresenter implements MoviesContract.UserActionsListener{
 
     @Override
     public void loadMovies(String apiKey) {
-        if (apiKey == null){
-            apiKey = "38594c476985d7c2fad6093dc2ac98f7";
-            serviceApi.getMovies(apiKey,movies -> {
-                mMoviesView.showMovies(movies);
-            });
-        }
+        serviceApi.getMovies(apiKey,movies -> {
+            mMoviesView.showMovies(movies);
+        });
+    }
+
+    @Override
+    public void loadMoviesTopRated(String apiKey) {
+        serviceApi.getMoviesTopRated(apiKey,movies -> {
+            mMoviesView.showMoviesTopRated(movies);
+        });
+    }
+
+    @Override
+    public void loadSearchMovies(String apiKey, String query) {
+        serviceApi.getSearch(apiKey, query, movies -> {
+            mMoviesView.showSearchMovies(movies);
+        });
     }
 }

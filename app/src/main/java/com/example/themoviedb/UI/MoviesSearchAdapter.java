@@ -20,25 +20,25 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+public class MoviesSearchAdapter extends RecyclerView.Adapter<MoviesSearchAdapter.ViewHolder> {
     private List<MovieDetails> moviesList;
     private Context context;
 
-    public MoviesAdapter(List<MovieDetails> movies, Context context){
+    public MoviesSearchAdapter(List<MovieDetails> movies, Context context){
         this.moviesList = movies;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public MoviesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MoviesSearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_movie_list, parent, false);
-        return new MoviesAdapter.ViewHolder(view);
+        return new MoviesSearchAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MoviesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MoviesSearchAdapter.ViewHolder holder, int position) {
         MovieDetails movieDetails = moviesList.get(position);
         String posterLink = "http://image.tmdb.org/t/p/original" + movieDetails.getPosterPath();
 
