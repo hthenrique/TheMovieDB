@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -15,26 +14,22 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.themoviedb.API.RequestApi;
-import com.example.themoviedb.API.RetrofitClient;
-import com.example.themoviedb.API.RetrofitEndPoint;
 import com.example.themoviedb.Model.MovieDetails;
-import com.example.themoviedb.Model.MovieResponse;
 import com.example.themoviedb.R;
 import com.example.themoviedb.UI.MoviesAdapter;
+import com.example.themoviedb.UI.MoviesSearchAdapter;
+import com.example.themoviedb.UI.MoviesTopRatedAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements MoviesContract.View {
     RecyclerView recyclerviewPopularMovies, recyclerviewMoviesTopRated, searchList;
     ScrollView scrollView;
     SearchView.OnQueryTextListener queryTextListener;
     MoviesAdapter moviesAdapter;
+    MoviesTopRatedAdapter moviesTopRatedAdapter;
+    MoviesSearchAdapter moviesSearchAdapter;
     MoviesContract.UserActionsListener movieListener;
     //API key fornecida pelo site
     String apiKey = "38594c476985d7c2fad6093dc2ac98f7";
@@ -49,15 +44,19 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
         searchList = findViewById(R.id.searchList);
         scrollView = findViewById(R.id.mainScrollView);
 
-        movieListener.loadMovies(apiKey);
-
+        //movieListener.loadMovies(apiKey);
         moviesAdapter = new MoviesAdapter(new ArrayList<MovieDetails>(0),getApplicationContext());
+        moviesTopRatedAdapter = new MoviesTopRatedAdapter(new ArrayList<MovieDetails>(0),getApplicationContext());
+        moviesSearchAdapter = new MoviesSearchAdapter(new ArrayList<MovieDetails>(0),getApplicationContext());
+
         movieListener = new MoviesPresenter(this);
-        recyclerviewPopularMovies.setAdapter(moviesAdapter);
 
         recyclerviewPopularMovies.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
         recyclerviewMoviesTopRated.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
         searchList.setLayoutManager(new GridLayoutManager(this, 2));
+
+        recyclerviewPopularMovies.setAdapter(moviesAdapter);
+        recyclerviewMoviesTopRated.setAdapter(moviesTopRatedAdapter);
 
         //Inicia as Listas
         //movieList();
@@ -67,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
     protected void onResume() {
         super.onResume();
         movieListener.loadMovies(apiKey);
+        movieListener.loadMoviesTopRated(apiKey);
     }
 
     @Override
@@ -80,21 +80,19 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
 
         if (searchView != null){
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
             queryTextListener = new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
                     //chama o metodo de procurar filmes
-                    searchMovie(query);
+                    movieListener.loadSearchMovies(apiKey,query);
+                    searchList.setAdapter(moviesSearchAdapter);
+                    scrollView.setVisibility(View.GONE);
+                    searchList.setVisibility(View.VISIBLE);
                     return true;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-
-                    /*recyclerviewMoviesTopRated.setAdapter(new MoviesAdapter(movieDetails, getApplicationContext()));
-                    scrollView.setVisibility(View.VISIBLE);
-                    searchList.setVisibility(View.GONE);*/
                     movieList();
                     return false;
                 }
@@ -102,26 +100,6 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
             searchView.setOnQueryTextListener(queryTextListener);
         }
         return super.onCreateOptionsMenu(menu);
-    }
-
-    private void searchMovie(String query) {
-        //Callback de pesquisa de filmes
-        RetrofitEndPoint retrofitEndPoint = RetrofitClient.getClient().create(RetrofitEndPoint.class);
-        Call<MovieResponse> call = retrofitEndPoint.getSearchMovie(apiKey, query);
-        call.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                List<MovieDetails> movieDetails = response.body().getResults();
-                searchList.setAdapter(new MoviesAdapter(movieDetails, getApplicationContext()));
-                scrollView.setVisibility(View.GONE);
-                searchList.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Request Fail", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void movieList() {
@@ -132,5 +110,21 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
     @Override
     public void showMovies(List<MovieDetails> movies) {
         moviesAdapter.replaceData(movies);
+        scrollView.setVisibility(View.VISIBLE);
+        searchList.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showMoviesTopRated(List<MovieDetails> moviesTopRated) {
+        moviesTopRatedAdapter.replaceData(moviesTopRated);
+        scrollView.setVisibility(View.VISIBLE);
+        searchList.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showSearchMovies(List<MovieDetails> movies) {
+        moviesSearchAdapter.replaceData(movies);
+        scrollView.setVisibility(View.GONE);
+        searchList.setVisibility(View.VISIBLE);
     }
 }

@@ -12,6 +12,8 @@ public interface ServiceApi {
 
     void getMovies(String apiKey, ServiceApiCallback<MovieResponse> callback);
 
-    void getSearch(String apiKey, ServiceApiCallback<MovieDetails> callback);
+    void getMoviesTopRated(String apiKey, ServiceApiCallback<MovieResponse> callback);
+
+    void getSearch(String apiKey, String query, ServiceApiCallback<MovieDetails> callback);
 
 }
