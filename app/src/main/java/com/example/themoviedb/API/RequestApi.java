@@ -66,7 +66,6 @@ public class RequestApi implements ServiceApi {
     @Override
     public void getSearch(String apiKey, String query, ServiceApiCallback<MovieDetails> callback) {
         //Callback de pesquisa de filmes
-        RetrofitEndPoint retrofitEndPoint = RetrofitClient.getClient().create(RetrofitEndPoint.class);
         Call<MovieResponse> call = retrofitEndPoint.getSearchMovie(apiKey, query);
         call.enqueue(new Callback<MovieResponse>() {
             @Override
