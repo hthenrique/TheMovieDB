@@ -75,10 +75,6 @@ public class RequestApi implements ServiceApi {
                     List<MovieDetails> movieDetails = response.body().getResults();
                     callback.onLoaded(movieDetails);
                 }
-
-                /*searchList.setAdapter(new MoviesAdapter(movieDetails, getApplicationContext()));
-                scrollView.setVisibility(View.GONE);
-                searchList.setVisibility(View.VISIBLE);*/
             }
 
             @Override
