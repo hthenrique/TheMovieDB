@@ -1,4 +1,4 @@
-package com.example.themoviedb.UI;
+package com.example.themoviedb.UI.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,25 +20,25 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+public class MoviesPopularAdapter extends RecyclerView.Adapter<MoviesPopularAdapter.ViewHolder> {
     private List<MovieDetails> moviesList;
     private Context context;
 
-    public MoviesAdapter(List<MovieDetails> movies, Context context){
+    public MoviesPopularAdapter(List<MovieDetails> movies, Context context){
         this.moviesList = movies;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public MoviesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MoviesPopularAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_movie_list, parent, false);
-        return new MoviesAdapter.ViewHolder(view);
+        return new MoviesPopularAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MoviesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MoviesPopularAdapter.ViewHolder holder, int position) {
         MovieDetails movieDetails = moviesList.get(position);
         String posterLink = "http://image.tmdb.org/t/p/original" + movieDetails.getPosterPath();
 

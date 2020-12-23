@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.themoviedb.Model.MovieDetails;
 import com.example.themoviedb.R;
-import com.example.themoviedb.UI.MoviesAdapter;
-import com.example.themoviedb.UI.MoviesSearchAdapter;
-import com.example.themoviedb.UI.MoviesTopRatedAdapter;
+import com.example.themoviedb.UI.Adapters.MoviesPopularAdapter;
+import com.example.themoviedb.UI.Adapters.MoviesSearchAdapter;
+import com.example.themoviedb.UI.Adapters.MoviesTopRatedAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
     RecyclerView recyclerviewPopularMovies, recyclerviewMoviesTopRated, searchList;
     ScrollView scrollView;
     SearchView.OnQueryTextListener queryTextListener;
-    MoviesAdapter moviesAdapter;
+    MoviesPopularAdapter moviesPopularAdapter;
     MoviesTopRatedAdapter moviesTopRatedAdapter;
     MoviesSearchAdapter moviesSearchAdapter;
     MoviesContract.UserActionsListener movieListener;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
         scrollView = findViewById(R.id.mainScrollView);
 
         //movieListener.loadMovies(apiKey);
-        moviesAdapter = new MoviesAdapter(new ArrayList<MovieDetails>(0),getApplicationContext());
+        moviesPopularAdapter = new MoviesPopularAdapter(new ArrayList<MovieDetails>(0),getApplicationContext());
         moviesTopRatedAdapter = new MoviesTopRatedAdapter(new ArrayList<MovieDetails>(0),getApplicationContext());
         moviesSearchAdapter = new MoviesSearchAdapter(new ArrayList<MovieDetails>(0),getApplicationContext());
 
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
         recyclerviewMoviesTopRated.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
         searchList.setLayoutManager(new GridLayoutManager(this, 2));
 
-        recyclerviewPopularMovies.setAdapter(moviesAdapter);
+        recyclerviewPopularMovies.setAdapter(moviesPopularAdapter);
         recyclerviewMoviesTopRated.setAdapter(moviesTopRatedAdapter);
 
         //Inicia as Listas
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
 
     @Override
     public void showMovies(List<MovieDetails> movies) {
-        moviesAdapter.replaceData(movies);
+        moviesPopularAdapter.replaceData(movies);
         scrollView.setVisibility(View.VISIBLE);
         searchList.setVisibility(View.GONE);
     }

@@ -1,4 +1,4 @@
-package com.example.themoviedb.UI;
+package com.example.themoviedb.UI.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
