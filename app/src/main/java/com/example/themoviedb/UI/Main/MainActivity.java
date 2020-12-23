@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
     MoviesTopRatedAdapter moviesTopRatedAdapter;
     MoviesSearchAdapter moviesSearchAdapter;
     MoviesContract.UserActionsListener movieListener;
+
     //API key fornecida pelo site
     String apiKey = "38594c476985d7c2fad6093dc2ac98f7";
 
@@ -44,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
         searchList = findViewById(R.id.searchList);
         scrollView = findViewById(R.id.mainScrollView);
 
-        //movieListener.loadMovies(apiKey);
         moviesPopularAdapter = new MoviesPopularAdapter(new ArrayList<MovieDetails>(0),getApplicationContext());
         moviesTopRatedAdapter = new MoviesTopRatedAdapter(new ArrayList<MovieDetails>(0),getApplicationContext());
         moviesSearchAdapter = new MoviesSearchAdapter(new ArrayList<MovieDetails>(0),getApplicationContext());
@@ -57,9 +57,6 @@ public class MainActivity extends AppCompatActivity implements MoviesContract.Vi
 
         recyclerviewPopularMovies.setAdapter(moviesPopularAdapter);
         recyclerviewMoviesTopRated.setAdapter(moviesTopRatedAdapter);
-
-        //Inicia as Listas
-        //movieList();
     }
 
     @Override

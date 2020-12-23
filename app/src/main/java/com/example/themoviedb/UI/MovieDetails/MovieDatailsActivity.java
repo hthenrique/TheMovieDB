@@ -13,11 +13,7 @@ import com.example.themoviedb.R;
 import com.squareup.picasso.Picasso;
 
 public class MovieDatailsActivity extends AppCompatActivity {
-    String title;
-    String language;
-    String overview;
-    String poster;
-    String releaseDate;
+    String title, language, overview, poster, releaseDate;
     double ratingValue;
     ImageView moviePoster;
     TextView titleMovie, releaseDateTv, originalLanguage, overviewTv;
